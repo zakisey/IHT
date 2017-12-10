@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Rigidbody))]
 public class HumanController : MonoBehaviour {
 	private float m_Speed = 2.0f;
 	private Animator m_Animator;
+	private Rigidbody m_Rigidbody;
 	
 	// Use this for initialization
 	void Start () 
 	{
 		m_Animator = GetComponent<Animator>();
+		m_Rigidbody = GetComponent<Rigidbody>();
+		m_Rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 	}
 	
 	// Update is called once per frame
@@ -17,13 +22,8 @@ public class HumanController : MonoBehaviour {
 	{
 		float v = Input.GetAxis("Vertical");
 		float h = Input.GetAxis("Horizontal");
-		float translation = v * m_Speed * Time.deltaTime;
-		float rotation = h * 75.0f * Time.deltaTime;
 
-		m_Animator.SetBool("IsWalking", v != 0.0f || h != 0.0f);
-
-
-		transform.Translate(0, 0, translation);
-		transform.Rotate(0, rotation, 0);
+		m_Animator.SetFloat("Forward", v);
+		m_Animator.SetFloat("Turn", h);
 	}
 }
